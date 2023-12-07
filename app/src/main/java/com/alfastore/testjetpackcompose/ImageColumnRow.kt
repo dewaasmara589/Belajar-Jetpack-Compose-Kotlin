@@ -1,5 +1,6 @@
 package com.alfastore.testjetpackcompose
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,10 +23,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -39,6 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 class ImageColumnRow : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +57,51 @@ class ImageColumnRow : ComponentActivity() {
 
         setContent{
             Surface(modifier = Modifier.fillMaxSize()) {
-                Content(Message("Name1", "Message TEXT1"))
+                val navController = rememberNavController()
+                SecondScreen(navController)
             }
         }
     }
+}
+
+val messages = listOf(
+    Message("Student 1", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."),
+    Message("Student 2", "It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
+    Message("Student 3", "15"),
+    Message("Student 4", "87"),
+    Message("Student 5", "22"),
+    Message("Student 6", "Where does it come from?"),
+    Message("Student 7", "125"),
+    Message("Student 8", "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old."),
+    Message("Student 9", "15"),
+    Message("Student 10", "87"),
+    Message("Student 11", "22"),
+)
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SecondScreen(navHostController: NavHostController){
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Magenta),
+                title = {
+                    Text(text = "Second Screen", fontWeight = FontWeight.Bold, color = Color.White)
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navHostController.navigateUp() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    }
+                }
+            )
+        },
+        content = { paddingValues ->
+            Column (modifier = Modifier.padding(paddingValues)){
+                Conversation(messages)
+            }
+        }
+    )
 }
 
 // Data Model
@@ -89,7 +141,9 @@ fun Content(msg: Message){
                 shape = MaterialTheme.shapes.medium,
                 shadowElevation = 1.dp,
                 color = surfaceColor,
-                modifier = Modifier.animateContentSize().padding(1.dp)
+                modifier = Modifier
+                    .animateContentSize()
+                    .padding(1.dp)
             ) {
                 Text(
                     text = msg.subTitle,
@@ -117,22 +171,9 @@ fun Conversation(messages: List<Message>){
     }
 }
 
-val messages = listOf(
-    Message("Student 1", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."),
-    Message("Student 2", "It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
-    Message("Student 3", "15"),
-    Message("Student 4", "87"),
-    Message("Student 5", "22"),
-    Message("Student 6", "Where does it come from?"),
-    Message("Student 7", "125"),
-    Message("Student 8", "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old."),
-    Message("Student 9", "15"),
-    Message("Student 10", "87"),
-    Message("Student 11", "22"),
-)
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewDesign(){
-    Conversation(messages)
+    val navController = rememberNavController()
+    SecondScreen(navController)
 }

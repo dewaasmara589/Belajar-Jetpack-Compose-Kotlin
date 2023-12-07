@@ -1,5 +1,6 @@
 package com.alfastore.testjetpackcompose
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,12 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -25,6 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
@@ -33,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
         // To Call Composable Function
         setContent{
-            MainScreen()
+            ComposeNavigation()
         }
     }
 
@@ -58,26 +66,52 @@ class MainActivity : ComponentActivity() {
 //    }
 }
 
+@Composable
+fun ComposeNavigation() {
+
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "First"){
+        composable("First"){
+            MainScreen(navController)
+        }
+        composable("Second"){
+            SecondScreen(navController)
+        }
+    }
+
+}
+
 
 @Composable
-fun MainScreen(){
+fun MainScreen(navHostController: NavHostController){
     Column(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
         .background(Color.White)
-        .verticalScroll(rememberScrollState())
+        .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 //        TextComponent("- Tes Dynamic Value 1 -", shadowColor = Color.Yellow)
 //        TextComponent("- Tes Dynamic Value 2 -", shadowColor = Color.Green)
 
         EvenNumbers()
+
+        Button(
+            onClick = {
+                navHostController.navigate("second")
+            },
+            modifier = Modifier.padding(top = 20.dp))
+        {
+            Text(text = "Next Activity", fontSize = 20.sp)
+        }
     }
 }
 
 
 @Composable
 fun EvenNumbers(){
-    for (number in 2..10){
+    for (number in 2..7){
         val color = Color(
             red = Random.nextInt(256),
             green = Random.nextInt(256),
@@ -129,6 +163,7 @@ fun TextComponent(value: String, shadowColor: Color){
 @Preview(showBackground = true)
 @Composable
 fun defaultPreview(){
-    MainScreen()
+    val navController = rememberNavController()
+    MainScreen(navController)
 }
 // ----- END To View in Design Android Studio -----
