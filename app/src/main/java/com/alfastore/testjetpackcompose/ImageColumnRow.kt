@@ -130,11 +130,18 @@ fun Content(msg: Message){
         Spacer(modifier = Modifier.width(8.dp))
 
         var isExpanded by remember { mutableStateOf(false) }
+        // or
+//        var isExpanded2 = remember { mutableStateOf(false) }
+
         val surfaceColor by animateColorAsState(
             if (isExpanded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+            // or
+//            if (isExpanded2.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
         )
 
         Column (modifier = Modifier.clickable { isExpanded = !isExpanded }){
+            // or
+//        Column (modifier = Modifier.clickable { isExpanded2.value = !isExpanded2.value }){
             Text(text = msg.title, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Gray)
             Spacer(modifier = Modifier.height(4.dp))
             Surface(
@@ -149,6 +156,8 @@ fun Content(msg: Message){
                     text = msg.subTitle,
                     modifier = Modifier.padding(all = 4.dp),
                     maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                    // or
+//                    maxLines = if (isExpanded2.value) Int.MAX_VALUE else 1,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
